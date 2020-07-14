@@ -22,8 +22,11 @@ class BottleController < ApplicationController
   def nicknames
     nicknames = []
     nicknames << params["customer_bottle_form"]["n"]
-    params["customer_bottle_form"]["nickname"][1].each do |n|
-      nicknames << n
+
+    if params["customer_bottle_form"]["nickname"]
+      params["customer_bottle_form"]["nickname"].each do |n|
+        nicknames << n[1]
+      end
     end
     return nicknames
   end
