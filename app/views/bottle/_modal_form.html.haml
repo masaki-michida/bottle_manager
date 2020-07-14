@@ -1,0 +1,30 @@
+.form_content
+  = form_with model: @new_bottle,url:{controller: 'bottle', action: 'create' },local: true do |form|
+    .localnumber
+      = form.label :local_number
+      = form.number_field :local_number
+    .selector
+      = form.label :kind_of_alchol_id
+      = form.select :kind_of_alchol_id,@kinds
+    .liquid_level
+      = form.label :liquid_level
+      = form.number_field :liquid_level
+    .karaoke
+      = form.label :karaoke
+      = form.number_field :karaoke
+    .nickname0
+      = form.label :nickname,class: "nicknamelabel"
+      = form.text_field :nickname[0],class: "nicknametext"
+    .add_form 名前を追加
+    .submit 
+      = form.submit
+:javascript
+  count = 0
+  $('.add_form').on('click',()=>{$(`.nickname${count}`).after(`
+  <div class="nickname${count+1}">
+  <label class="nicknamelabel" for="customer_bottle_form_nickname${count+1}">Nickname</label>
+  <input type="text" name="customer_bottle_form[nickname[${count+1}]]">
+  <div class="delete_form${count+1}">名前を削除</div>
+  </div>`)
+  count += 1 
+  })

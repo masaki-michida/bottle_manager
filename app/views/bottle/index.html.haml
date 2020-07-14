@@ -1,0 +1,11 @@
+%nav
+  .nav-wrapper.black
+    %form
+      .input-field
+        %input#search{:required => "", :type => "search"}
+        %label.label-icon{:for => "search"}
+          %i.material-icons search
+        %i.material-icons close
+.top_page
+  =render partial: "customer_card"
+  =render partial: "modal_form"
