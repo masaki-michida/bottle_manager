@@ -5,6 +5,7 @@ class CreateCustomers < ActiveRecord::Migration[5.2]
       t.integer :local_number
       t.string :name
       t.integer :karaoke_customer
+      t.text :features
       t.integer :status, index: true
       t.datetime :birthday
 
