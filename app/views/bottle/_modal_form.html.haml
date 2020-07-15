@@ -12,19 +12,21 @@
     .karaoke
       = form.label :karaoke
       = form.number_field :karaoke
-    .nickname0
-      = form.label :nickname,class: "nicknamelabel"
-      = form.text_field :nickname[0],class: "nicknametext"
-    .add_form 名前を追加
+    .add_created_cusomer 既にある名前を追加
+    .add_form 新しい名前を追加
     .submit 
       = form.submit
 :javascript
   count = 0
-  $('.add_form').on('click',()=>{$(`.nickname${count}`).after(`
+  $('.add_form').on('click',()=>{$(`.add_form`).before(`
   <div class="nickname${count+1}">
   <label class="nicknamelabel" for="customer_bottle_form_nickname${count+1}">Nickname</label>
   <input type="text" name="customer_bottle_form[nickname[${count+1}]]">
-  <div class="delete_form${count+1}">名前を削除</div>
+  <div id="delete_form" class="delete_form${count+1}">キャンセル</div>
   </div>`)
   count += 1 
+  })
+  $(document).on('click','#delete_form',()=>{
+    var delete_fom = $('#delete_form').attr('class')
+    console.log(delete_fom)
   })

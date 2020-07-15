@@ -17,12 +17,20 @@ class BottleController < ApplicationController
     end
   end
 
+  def search
+    @nicknames = Nickname.where('name Like(?)',"%#{params[:keyword]}%").limit(10)
+  if @nicknames
+    respond_to do |format|
+      format.html
+      format.json
+    end
+  end
+  end
+
   private
 
   def nicknames
     nicknames = []
-    nicknames << params["customer_bottle_form"]["n"]
-
     if params["customer_bottle_form"]["nickname"]
       params["customer_bottle_form"]["nickname"].each do |n|
         nicknames << n[1]

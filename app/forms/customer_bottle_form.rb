@@ -24,9 +24,8 @@ class CustomerBottleForm
         bottler.save!
       end
 
-
-
     end
+    
   end
 
 end

@@ -1,0 +1,50 @@
+.search_container
+  %span 検索フォーム
+  =form_with url:{controller: :bottle,action: :search}, method: :get do |form|
+    =form.label :search_name
+    =form.text_field :search_name, id: 'searching_form'
+  .search_result
+    %ul
+:javascript
+  var searchResult = $('.search_result ul')
+  console.log('loadingOk')
+
+  function add_result(data){
+    searchResult.append(`<li>${data.name}</li>`)
+  }
+
+  function no_result(msg){
+    searchResult.append(`<li>${msg}</li>`)
+  }
+
+  $('#searching_form').on('keyup',(e)=>{
+    e.preventDefault()
+    var target = $('#searching_form').val()
+    if(target != ''){ 
+      search(target)
+    } else {
+      searchResult.empty()
+    }
+  })
+
+  function search(target){
+    $.ajax({
+      type: 'GET',
+      url: 'bottle/search',
+      data: {keyword: target},
+      dataType: 'json'
+    }).done((data)=>{
+      searchResult.empty()
+      if(Object.keys(data).length !== 0){
+        data.forEach((data)=>{
+          add_result(data)
+          console.log(Object.keys(data).length)
+        })
+      } else {
+        console.log('iiiiiiii')
+        no_result('結果なし')
+      }
+    }).fail({
+
+    })
+  }

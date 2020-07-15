@@ -10,3 +10,7 @@
             &nbsp;
             %span="#{b.liquid_level}"
             %span="#{b.id}"
+            &nbsp
+            -b.customer_bottles.each do |b|
+              -if Nickname.where(customer_id: b.customer_id)
+                %span=Nickname.where(customer_id: b.customer_id)[0].name
