@@ -1,9 +1,9 @@
 .form_content
-  = form_with model: @new_bottle,url:{controller: 'bottle', action: 'create' },local: true do |form|
+  = form_with model: @new_bottle,url:{controller: 'bottle', action: 'create' } do |form|
     .selector
       = form.label :kind_of_alchol_id
       = form.select :kind_of_alchol_id,@kinds,prompt: "選択してください"
-    .localnumber
+    .localnumber{style: "display: none"}
       = form.label :local_number
       = form.number_field :local_number, value: nil
     .liquid_level
@@ -14,9 +14,12 @@
       = form.number_field :karaoke
     .add_created_cusomer 既にある名前を追加
     .add_form 新しい名前を追加
-    .submit 
+    .submit_for_new_bottle
       = form.button{'送信する'}
 :javascript
+
+
+
   count = 0
   $('.add_form').on('click',()=>{$(`.add_form`).before(`
   <div class="nickname${count+1}">
@@ -43,15 +46,36 @@
 
   $('#customer_bottle_form_kind_of_alchol_id').on('change',(e)=>{
     alcholVal = $('#customer_bottle_form_kind_of_alchol_id').val()
-     function localNumVal(num){$('#customer_bottle_form_local_number').val(num)}
-      $.ajax({
-        type: 'GET',
-        url: 'bottle/get_local_number',
-        data: {alcholId: alcholVal},
-        dataType: 'json'
-      }).done((data)=>{
-        localNumVal(data['number'])
-      }).fail(()=>{
-        alert("失敗しました")
-      })
+    localNum = $('#customer_bottle_form_local_number')
+     function localNumVal(num){localNum.val(num)}
+     if((alcholVal != false)){
+        $.ajax({
+          type: 'GET',
+          url: 'bottle/get_local_number',
+          data: {alcholId: alcholVal},
+          dataType: 'json'
+        }).done((data)=>{
+          $('.localnumber').css({"display": "block"})
+          localNumVal(data['number'])
+        }).fail(()=>{
+          localNumVal(null)
+          alert('警告:値を変えないでください')
+        })
+     } else{
+      localNumVal(null)
+      $('.localnumber').css({"display": "none"})
+     }
+  })
+
+  $('.submit_for_new_bottle').on('click',()=>
+  {
+    $.ajax({
+      type: 'GET',
+      url: 'bottle/index',
+      dataType: 'json'
+    }).done({
+
+    }).fail({
+
+    })
   })

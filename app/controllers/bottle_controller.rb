@@ -3,9 +3,15 @@ require './app/forms/customer_bottle_form'
 class BottleController < ApplicationController
 
   def index
-    @bottle = Bottle.all.last(10)
     @new_bottle = CustomerBottleForm.new
     @kinds = KindOfAlchol.pluck(:name,:id)
+
+    @get_bottle_id = 1
+    respond_to do |format|
+      format.html
+      format.json
+    end
+
   end
 
   def create
@@ -19,7 +25,7 @@ class BottleController < ApplicationController
 
   def get_search_nickname
     keyword = "#{params[:keyword]}%"
-    if @get_search_nickname = Nickname.where('furigana collate utf8_unicode_ci Like(?) OR name collate utf8_unicode_ci Like(?)',keyword,keyword).limit(10)
+    if @search_nickname = Nickname.eager_load(:customer).order("customers.status DESC").where('nicknames.furigana collate utf8_unicode_ci Like(?) OR nicknames.name collate utf8_unicode_ci Like(?)',keyword,keyword)
       respond_to do |format|
         format.html
         format.json
@@ -28,7 +34,8 @@ class BottleController < ApplicationController
   end
 
   def get_local_number
-    if @local_number_plus = Bottle.where(kind_of_alchol_id: KindOfAlchol.find(params[:alcholId])).select(:local_number).order(local_number: :desc).first.local_number+1
+    if params[:alcholId].to_i
+      @local_number_plus = Bottle.where(kind_of_alchol_id: KindOfAlchol.find(params[:alcholId])).select(:local_number).order(local_number: :desc).first.local_number+1
       respond_to do |format|
         format.html
         format.json
@@ -45,7 +52,7 @@ class BottleController < ApplicationController
     end
 
   def new_bottle_params
-    params.require(:customer_bottle_form).permit(:local_number,:kind_of_alchol_id,:liquid_level,:karaoke).merge(status: 1,nicknames: twod_array_nickname_furigana)
+    params.require(:customer_bottle_form).permit(:local_number,:kind_of_alchol_id,:liquid_level,:karaoke).merge(status: 1,nickname_furigana: twod_array_nickname_furigana)
   end
 
 end
