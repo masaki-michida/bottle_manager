@@ -17,8 +17,9 @@ class BottleController < ApplicationController
     end
   end
 
-  def search
-    if @nicknames = Nickname.where('name collate utf8_unicode_ci Like(?)',"#{params[:keyword]}%").limit(10)
+  def get_search_nickname
+    keyword = "#{params[:keyword]}%"
+    if @get_search_nickname = Nickname.where('furigana collate utf8_unicode_ci Like(?) OR name collate utf8_unicode_ci Like(?)',keyword,keyword).limit(10)
       respond_to do |format|
         format.html
         format.json

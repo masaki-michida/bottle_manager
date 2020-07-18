@@ -1,6 +1,6 @@
 .search_container
   %span 検索フォーム
-  =form_with url:{controller: :bottle,action: :search}, method: :get do |form|
+  =form_with url:{controller: :bottle,action: :get_search_nickname}, method: :get do |form|
     =form.label :search_name
     =form.search_field :search_name, id: 'searching_form'
   .search_result
@@ -19,19 +19,19 @@
 
   $('#searching_form').on('keyup',(e)=>{
     e.preventDefault()
-    var target = $('#searching_form').val()
-    if(target != ''){ 
-      search(target)
+    var inputSearchBox = $('#searching_form').val()
+    if(inputSearchBox != ''){ 
+      search(inputSearchBox)
     } else {
       searchResult.empty()
     }
   })
 
-  function search(target){
+  function search(inputSearchBox){
     $.ajax({
       type: 'GET',
-      url: 'bottle/search',
-      data: {keyword: target},
+      url: 'bottle/get_search_nickname',
+      data: {keyword: inputSearchBox},
       dataType: 'json'
     }).done((data)=>{
       searchResult.empty()
