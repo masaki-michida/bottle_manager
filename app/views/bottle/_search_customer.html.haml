@@ -2,7 +2,7 @@
   %span 検索フォーム
   =form_with url:{controller: :bottle,action: :search}, method: :get do |form|
     =form.label :search_name
-    =form.text_field :search_name, id: 'searching_form'
+    =form.search_field :search_name, id: 'searching_form'
   .search_result
     %ul
 :javascript
@@ -38,12 +38,11 @@
       if(Object.keys(data).length !== 0){
         data.forEach((data)=>{
           add_result(data)
-          console.log(Object.keys(data).length)
         })
       } else {
         no_result('結果なし')
       }
-    }).fail({
+    }).fail(()=>{
 
     })
   }

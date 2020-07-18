@@ -18,29 +18,33 @@ class BottleController < ApplicationController
   end
 
   def search
-    @nicknames = Nickname.where('name Like(?)',"%#{params[:keyword]}%").limit(10)
-  if @nicknames
-    respond_to do |format|
-      format.html
-      format.json
+    if @nicknames = Nickname.where('name collate utf8_unicode_ci Like(?)',"#{params[:keyword]}%").limit(10)
+      respond_to do |format|
+        format.html
+        format.json
+      end
     end
   end
+
+  def get_local_number
+    if @local_number_plus = Bottle.where(kind_of_alchol_id: KindOfAlchol.find(params[:alcholId])).select(:local_number).order(local_number: :desc).first.local_number+1
+      respond_to do |format|
+        format.html
+        format.json
+      end
+    end
   end
 
   private
 
-  def nicknames
-    nicknames = []
-    if params["customer_bottle_form"]["nickname"]
-      params["customer_bottle_form"]["nickname"].each do |n|
-        nicknames << n[1]
-      end
+    def twod_array_nickname_furigana(nickname=params["customer_bottle_form"]["nickname"],furigana=params["customer_bottle_form"]["furigana"]) 
+      nickname_val = nickname.values
+      furigana_val = furigana.values
+      return nickname_val.zip(furigana_val)
     end
-    return nicknames
-  end
 
   def new_bottle_params
-    params.require(:customer_bottle_form).permit(:local_number,:kind_of_alchol_id,:liquid_level,:karaoke).merge(status: 1,nicknames: nicknames)
+    params.require(:customer_bottle_form).permit(:local_number,:kind_of_alchol_id,:liquid_level,:karaoke).merge(status: 1,nicknames: twod_array_nickname_furigana)
   end
 
 end

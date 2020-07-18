@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   resources :bottle do
     collection do
       get 'search'
+      get 'get_local_number'
     end
   end
 

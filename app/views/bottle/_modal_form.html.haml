@@ -1,11 +1,11 @@
 .form_content
   = form_with model: @new_bottle,url:{controller: 'bottle', action: 'create' },local: true do |form|
-    .localnumber
-      = form.label :local_number
-      = form.number_field :local_number
     .selector
       = form.label :kind_of_alchol_id
-      = form.select :kind_of_alchol_id,@kinds
+      = form.select :kind_of_alchol_id,@kinds,prompt: "選択してください"
+    .localnumber
+      = form.label :local_number
+      = form.number_field :local_number, value: nil
     .liquid_level
       = form.label :liquid_level
       = form.number_field :liquid_level
@@ -15,18 +15,43 @@
     .add_created_cusomer 既にある名前を追加
     .add_form 新しい名前を追加
     .submit 
-      = form.submit
+      = form.button{'送信する'}
 :javascript
   count = 0
   $('.add_form').on('click',()=>{$(`.add_form`).before(`
   <div class="nickname${count+1}">
   <label class="nicknamelabel" for="customer_bottle_form_nickname${count+1}">Nickname</label>
-  <input type="text" name="customer_bottle_form[nickname[${count+1}]]">
+  <input type="text" name="customer_bottle_form[nickname][${count+1}]" class="inputname${count+1}" id="inputname">
+  <label class="nicknamelabel" for="customer_bottle_form_furigana${count+1}" >Furigana</label>
+  <input type="text" title="カタカナで入力" name="customer_bottle_form[furigana][${count+1}]" class="inputfurigana${count+1}" id="inputfurigana">
   <div id="delete_form" class="delete_form${count+1}">キャンセル</div>
   </div>`)
   count += 1 
   })
-  $(document).on('click','#delete_form',()=>{
-    var delete_fom = $('#delete_form').attr('class')
-    console.log(delete_fom)
+  $(document).on('click','#delete_form',(e)=>{
+    var deleteFormClass = $(`.${e.target.className}`)
+    deleteFormClass.parent().remove()
+  })
+
+  $(document).on('focus','#inputname',(e)=>{
+    var inputName = $(`.${e.target.className}`)
+    var inputFurigana = inputName.next().next()
+    autoKana(inputName, inputFurigana, {
+      katakana : true  //true：カタカナ、false：ひらがな（デフォルト）
+    })
+  })
+
+  $('#customer_bottle_form_kind_of_alchol_id').on('change',(e)=>{
+    alcholVal = $('#customer_bottle_form_kind_of_alchol_id').val()
+     function localNumVal(num){$('#customer_bottle_form_local_number').val(num)}
+      $.ajax({
+        type: 'GET',
+        url: 'bottle/get_local_number',
+        data: {alcholId: alcholVal},
+        dataType: 'json'
+      }).done((data)=>{
+        localNumVal(data['number'])
+      }).fail(()=>{
+        alert("失敗しました")
+      })
   })
