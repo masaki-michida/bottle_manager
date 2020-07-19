@@ -10,7 +10,9 @@
   console.log('loadingOk')
 
   function add_result(data){
-    searchResult.append(`<li>${data.name}</li>`)
+    searchResult.append(`<li>名前：${data['nicknames'][0].name}　
+                          所有： ${(data['bottles'][0] != undefined) ? data['bottles'].forEach((n)=>{n.local_number}):'空っぽです'}
+                          </li>`)
   }
 
   function no_result(msg){
@@ -38,6 +40,10 @@
       if(Object.keys(data).length !== 0){
         data.forEach((data)=>{
           add_result(data)
+          console.log(data)
+          data['nicknames'].forEach((n)=>{
+            console.log(n)
+          })
         })
       } else {
         no_result('結果なし')

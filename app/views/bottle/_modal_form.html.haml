@@ -1,5 +1,5 @@
 .form_content
-  = form_with model: @new_bottle,url:{controller: 'bottle', action: 'create' } do |form|
+  = form_with model: @new_bottle,url:{controller: 'bottle', action: 'create' },method: 'POST' do |form|
     .selector
       = form.label :kind_of_alchol_id
       = form.select :kind_of_alchol_id,@kinds,prompt: "選択してください"
