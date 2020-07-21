@@ -6,13 +6,15 @@
   .search_result
     %ul
 :javascript
-  var searchResult = $('.search_result ul')
   console.log('loadingOk')
-
-  function add_result(data){
-    searchResult.append(`<li>名前：${data['nicknames'][0].name}　
-                          所有： ${(data['bottles'][0] != undefined) ? data['bottles'].forEach((n)=>{n.local_number}):'空っぽです'}
-                          </li>`)
+  var searchResult = $('.search_result ul')
+                                        
+  function dataAccess(segment,property){segment.map((n)=>{return [property]})}
+  function add_result(data,count){
+    searchResult.append(`<li data-name = ${data.nicknames.map((n)=>{return n.name})} data-customer = ${data.nicknames[0].customer_id} class = searchList${count}>名前：${data['nicknames'][0].name}　
+                          ${(data['bottles'][0] != undefined) ? data['bottles'].map((n)=>{return n['kind_of_alchol_id']}):'空っぽです'}
+                          </li>`
+                        )
   }
 
   function no_result(msg){
@@ -30,6 +32,7 @@
   })
 
   function search(inputSearchBox){
+    counter = 0
     $.ajax({
       type: 'GET',
       url: 'bottle/get_search_nickname',
@@ -39,11 +42,9 @@
       searchResult.empty()
       if(Object.keys(data).length !== 0){
         data.forEach((data)=>{
-          add_result(data)
-          console.log(data)
-          data['nicknames'].forEach((n)=>{
-            console.log(n)
-          })
+          add_result(data,counter)
+          data['bottles'][0] != undefined ? console.log(data['bottles'].map((n)=>{return n['kind_of_alchol_id']})): null
+          counter +=1
         })
       } else {
         no_result('結果なし')
@@ -52,3 +53,19 @@
 
     })
   }
+
+  counter2 = 0
+  $(document).on('click','.search_result li',(e)=>{
+    appendCustomer = $('.add_created_cusomer')
+    console.log(targetName = $(e.target).data('name'))
+    console.log(targetId = $(e.target).data('customer'))
+    var addNciknameId = `<div>${targetName}</div>
+                        <input type="hidden" name="customer_bottle_form[insert_existed_customer_id][${counter2+1}]" class="input_customer_number${counter2+1}" id="input_customer_number" value=${targetId}>`
+    if(addNciknameId){
+          appendCustomer.before(addNciknameId)
+          console.log(counter2)
+          counter2+=1
+    }else{
+      alert('すでに追加されています')
+    }
+  })

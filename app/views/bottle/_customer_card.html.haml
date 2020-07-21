@@ -1,18 +1,17 @@
 -# .add_card_button
-
--# .title__card
--#   .row
--#     .col.s10
--#       .card.blue-grey.darken-1
--#         .card-content.white-text
--#           %span=b.local_number
--#           &nbsp;
--#           %span=KindOfAlchol.find(b.kind_of_alchol_id).name
--#           &nbsp;
--#           %span="#{b.liquid_level}"
--#           %span="#{b.id}"
--#           &nbsp
--#           -b.customer_bottles.each do |b|
--#             -if Nickname.where(customer_id: b.customer_id)
--#               %span=Nickname.where(customer_id: b.customer_id)[0].name
+-#   .title__card
+-#     .row
+-#       .col.s10
+-#         .card.blue-grey.darken-1
+-#           .card-content.white-text
+-#             %span=b.local_number
+-#             &nbsp;
+-#             %span=KindOfAlchol.find(b.kind_of_alchol_id).name
+-#             &nbsp;
+-#             %span="#{b.liquid_level}"
+-#             %span="#{b.id}"
+-#             &nbsp
+-#             -b.customer_bottles.each do |b|
+-#               -if Nickname.where(customer_id: b.customer_id)
+-#                 %span=Nickname.where(customer_id: b.customer_id)[0].name
 -# :javascript

@@ -18,8 +18,8 @@
           ignoreString,
           baseKana;
 
-      elName = $(element1);
-      elKana = $(element2);
+      elName = element1;
+      elKana = element2;
       active = true;
       _stateClear();
 

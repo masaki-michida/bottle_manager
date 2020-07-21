@@ -14,6 +14,7 @@ class CustomerBottleForm
   attribute :status, :integer
 
   def save
+
     ActiveRecord::Base.transaction do
       bottle = Bottle.new(local_number: local_number,kind_of_alchol_id: kind_of_alchol_id,liquid_level: liquid_level,karaoke: karaoke,status: status)
       bottle.save!
@@ -29,7 +30,7 @@ class CustomerBottleForm
       end
 
       if insert_existed_customer_id
-        insert_existed_customer.each do |c|
+        insert_existed_customer_id.each do |c|
           bottle.customer_bottles.create(bottle_id: bottle.id,customer_id: c)
           if existed_customer_new_nickname
           end
