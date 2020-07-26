@@ -1,5 +1,5 @@
 .form_content
-  = form_with model: @new_bottle,url:{controller: 'bottle', action: 'create' },method: 'POST', local: true do |form|
+  = form_with model: @new_bottle,url:{controller: 'bottles', action: 'create' },method: 'POST', id: "new_bottle_form", local: true do |form|
     .selector
       = form.label :kind_of_alchol_id
       = form.select :kind_of_alchol_id,@kinds,prompt: "選択してください"
@@ -12,10 +12,10 @@
     .karaoke
       = form.label :karaoke
       = form.number_field :karaoke
-    .add_created_cusomer
+    %ul.add_created_cusomer#existedCustomer
     .add_form 新しい名前を追加
     .submit_for_new_bottle
-      = form.submit
+      = form.submit id: "form_submit"
 :javascript
   
   $('.add_form').on('click',()=>{
@@ -51,7 +51,7 @@
      if((alcholVal != false)){
         $.ajax({
           type: 'GET',
-          url: 'bottle/get_local_number',
+          url: 'bottles/get_local_number',
           data: {alcholId: alcholVal},
           dataType: 'json'
         }).done((data)=>{
@@ -65,4 +65,30 @@
       localNumVal(null)
       $('.localnumber').css({"display": "none"})
      }
+  })
+
+  $(document).on('submit','#new_bottle_form',(e)=>{
+    e.preventDefault()
+    var formData = new FormData($('#new_bottle_form').get(0))
+    var formValue = $('#new_bottle_form :input')
+    var customerNum = $('#existedCustomer')
+    $.ajax({
+      type: 'POST',
+      url: 'bottles',
+      data: formData,
+      contentType: false,
+      processData: false,
+      contentData: false
+    }).done((data)=>{
+      console.log("成功です")
+      $('.localnumber').css({"display": "none"})
+      for(var index = 2; index < formValue.length-1; index++){formValue.eq(index).val("")}
+      $(customerNum).empty()
+      $('#form_submit').removeAttr('disabled')
+    }).fail(()=>{
+      console.log('失敗です')
+      console.log(customerNum)
+      $('#form_submit').removeAttr('disabled')
+    }).always(()=>{
+    })
   })

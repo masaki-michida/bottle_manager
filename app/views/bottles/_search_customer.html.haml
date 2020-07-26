@@ -1,6 +1,6 @@
 .search_container
   %span 検索フォーム
-  =form_with url:{controller: :bottle,action: :get_search_nickname}, method: :get do |form|
+  =form_with url:{controller: :bottles,action: :get_search_nickname}, method: :get do |form|
     =form.label :search_name
     =form.search_field :search_name, id: 'searching_form'
   .search_result
@@ -35,7 +35,7 @@
     counter = 0
     $.ajax({
       type: 'GET',
-      url: 'bottle/get_search_nickname',
+      url: 'bottles/get_search_nickname',
       data: {keyword: inputSearchBox},
       dataType: 'json'
     }).done((data)=>{
@@ -59,10 +59,11 @@
     appendCustomer = $('.add_created_cusomer')
     console.log(targetName = $(e.target).data('name'))
     console.log(targetId = $(e.target).data('customer'))
-    var addNciknameId = `<div>${targetName}</div>
-                        <input type="hidden" name="customer_bottle_form[insert_existed_customer_id][${counter2+1}]" class="input_customer_number${counter2+1}" id="input_customer_number" value=${targetId}>`
+    var addNciknameId = `<li>${targetName}
+                        <input type="hidden" name="customer_bottle_form[insert_existed_customer_id][${counter2+1}]" class="input_customer_number${counter2+1}" id="input_customer_number" value=${targetId}>
+                        </li>`
     if(addNciknameId){
-          appendCustomer.before(addNciknameId)
+          appendCustomer.append(addNciknameId)
           console.log(counter2)
           counter2+=1
     }else{
